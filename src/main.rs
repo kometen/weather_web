@@ -1,9 +1,15 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 //use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
-use serde::{Deserialize};
+use serde::{Serialize, Deserialize};
 
 #[cfg(test)]
 mod test;
+
+#[derive(Serialize, Deserialize)]
+struct Info {
+    user_id: u32,
+    username: String,
+}
 
 #[derive(Deserialize)]
 struct WeatherMeasurement {
@@ -12,6 +18,11 @@ struct WeatherMeasurement {
     index: u16,
     field_description: String,
     measurement: f32,
+}
+
+#[get("/")]
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Consume weather data in json-format!")
 }
 
 #[get("/weather_data")]
@@ -38,11 +49,12 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .data(web::PayloadConfig::new(1 << 25))
+            .service(hello)
             .service(weather_data_get)
             .service(weather_data_post)
     })
-//        .bind_openssl("0.0.0.0:8080", builder)?
-        .bind("0.0.0.0:8080")?
+//        .bind_openssl("127.0.0.1:8080", builder)?
+        .bind("127.0.0.1:8080")?
         .run()
         .await
 }
