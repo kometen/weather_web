@@ -1,23 +1,64 @@
+use chrono::{DateTime, Local};
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 //use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize};
 
 #[cfg(test)]
 mod test;
 
-#[derive(Serialize, Deserialize)]
-struct Info {
-    user_id: u32,
-    username: String,
-}
-
 #[derive(Deserialize)]
 struct WeatherMeasurement {
-    publication_time: String,
+    #[serde(with = "my_date_format")]
+    publication_time: DateTime<Local>,
+//    publication_time: String,
     id: u16,
     index: u16,
     field_description: String,
     measurement: f32,
+}
+
+mod my_date_format {
+    use chrono::{DateTime, Local, TimeZone};
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    // https://docs.rs/chrono/0.4.19/chrono/format/strftime/index.html#fn8
+    //const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S%:z";
+    const FORMAT: &'static str = "%+";
+
+    // The signature of a serialize_with function must follow the pattern:
+    //
+    //    fn serialize<S>(&T, S) -> Result<S::Ok, S::Error>
+    //    where
+    //        S: Serializer
+    //
+    // although it may also be generic over the input types T.
+    pub fn serialize<S>(
+        date: &DateTime<Local>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+    {
+        let s = format!("{}", date.format(FORMAT));
+        serializer.serialize_str(&s)
+    }
+
+    // The signature of a deserialize_with function must follow the pattern:
+    //
+    //    fn deserialize<'de, D>(D) -> Result<T, D::Error>
+    //    where
+    //        D: Deserializer<'de>
+    //
+    // although it may also be generic over the output types T.
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<DateTime<Local>, D::Error>
+        where
+            D: Deserializer<'de>,
+    {
+        let s = String::deserialize(deserializer)?;
+        Local.datetime_from_str(&s, FORMAT).map_err(serde::de::Error::custom)
+    }
 }
 
 #[get("/")]
@@ -34,7 +75,8 @@ async fn weather_data_get() -> impl Responder {
 async fn weather_data_post(weather_measurement: String) -> Result<String> {
     let measurements: Vec<WeatherMeasurement> = serde_json::from_str(&*weather_measurement).unwrap();
     for m in &measurements {
-        println!("id: {}, index: {}, field description: {}", m.id, m.index, m.field_description);
+        println!("publication_time: {}, id: {}, index: {}, field description: {}",
+                 m.publication_time, m.id, m.index, m.field_description);
     }
     Ok(format!("id: {}, index: {}", &measurements[0].id, &measurements[0].index))
 }
