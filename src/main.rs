@@ -10,13 +10,13 @@ mod test;
 struct WeatherMeasurement {
     #[serde(with = "my_date_format")]
     publication_time: DateTime<Local>,
-//    publication_time: String,
     id: u16,
     index: u16,
     field_description: String,
     measurement: f32,
 }
 
+// https://serde.rs/custom-date-format.html
 mod my_date_format {
     use chrono::{DateTime, Local, TimeZone};
     use serde::{self, Deserialize, Serializer, Deserializer};
