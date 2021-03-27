@@ -1,5 +1,5 @@
 table! {
-    readings (publication_time) {
+    readings {
         publication_time -> Nullable<Timestamp>,
         id -> Nullable<Integer>,
         index -> Nullable<Integer>,

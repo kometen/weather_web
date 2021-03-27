@@ -1,17 +1,22 @@
+#[macro_use]
+extern crate diesel;
+
 use chrono::{DateTime, Local};
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 //use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use serde::{Deserialize};
+use diesel::prelude::*;
+use weather_web::establish_connection;
 
 #[cfg(test)]
 mod test;
 
 #[derive(Deserialize)]
-struct WeatherMeasurement {
+struct Reading {
     #[serde(with = "my_date_format")]
     publication_time: DateTime<Local>,
-    id: u16,
-    index: u16,
+    id: i32,
+    index: i32,
     field_description: String,
     measurement: f32,
 }
@@ -73,10 +78,18 @@ async fn weather_data_get() -> impl Responder {
 
 #[post("/weather_data")]
 async fn weather_data_post(weather_measurement: String) -> Result<String> {
-    let measurements: Vec<WeatherMeasurement> = serde_json::from_str(&*weather_measurement).unwrap();
+    let connection = establish_connection();
+
+    let measurements: Vec<Reading> = serde_json::from_str(&*weather_measurement).unwrap();
+/*
+    let inserted_measurements = diesel::insert_into(readings)
+        .values(&measurements)
+        .execute(&connection)
+        .unwrap();
+    println!("status: {}", inserted_measurements);*/
     for m in &measurements {
-        println!("publication_time: {}, id: {}, index: {}, field description: {}",
-                 m.publication_time, m.id, m.index, m.field_description);
+        println!("publication_time: {}, id: {}, index: {}, field description: {}, measurement: {}",
+                 m.publication_time, m.id, m.index, m.field_description, m.measurement);
     }
     Ok(format!("id: {}, index: {}", &measurements[0].id, &measurements[0].index))
 }
