@@ -1,4 +1,3 @@
-use bigdecimal::BigDecimal;
 use serde::{Deserialize};
 use chrono::{DateTime, Local};
 use crate::schema::readings;
