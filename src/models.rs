@@ -1,15 +1,16 @@
+use bigdecimal::BigDecimal;
 use serde::{Deserialize};
 use chrono::{DateTime, Local};
 use crate::schema::readings;
 
 #[derive(Deserialize, Insertable)]
-struct Reading {
+pub(crate) struct Reading {
     #[serde(with = "my_date_format")]
-    measurement_time_default: DateTime<Local>,
-    id: i32,
-    index: i32,
-    field_description: String,
-    measurement: f32,
+    pub(crate) measurement_time_default: DateTime<Local>,
+    pub(crate) id: i32,
+    pub(crate) index: i32,
+    pub(crate) field_description: String,
+    pub(crate) measurement: f32,
 }
 
 // https://serde.rs/custom-date-format.html
