@@ -31,13 +31,14 @@ async fn weather_data_post(weather_measurement: String) -> Result<String> {
 
     let inserted_measurements = diesel::insert_into(readings)
         .values(&measurements)
+        .on_conflict_do_nothing()
         .execute(&connection)
         .unwrap();
     println!("status: {}", inserted_measurements);
-    for m in &measurements {
+/*    for m in &measurements {
         println!("measurement_time_default: {}, id: {}, index: {}, field description: {}, measurement: {}",
                  m.measurement_time_default, m.id, m.index, m.field_description, m.measurement);
-    }
+    }*/
     Ok(format!("id: {}, index: {}", &measurements[0].id, &measurements[0].index))
 }
 
