@@ -1398,16 +1398,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "serde-datetime"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9186b742e30825f51a57bd111f86e2c3deb6f4cbd4a57c9185e006f58965e39c"
-dependencies = [
- "chrono",
- "serde",
-]
-
-[[package]]
 name = "serde_derive"
 version = "1.0.125"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1921,7 +1911,6 @@ dependencies = [
  "dotenv",
  "openssl",
  "serde",
- "serde-datetime",
  "serde_json",
 ]
 

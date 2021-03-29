@@ -1,10 +1,10 @@
 #[macro_use]
 extern crate diesel;
 
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Local, NaiveDateTime};
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 //use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
-use serde::{Deserialize};
+use serde::{Deserialize, Deserializer, de};
 use diesel::prelude::*;
 use weather_web::establish_connection;
 
@@ -14,7 +14,7 @@ mod test;
 #[derive(Deserialize)]
 struct Reading {
     #[serde(with = "my_date_format")]
-    publication_time: DateTime<Local>,
+    measurement_time_default: DateTime<Local>,
     id: i32,
     index: i32,
     field_description: String,
@@ -88,8 +88,8 @@ async fn weather_data_post(weather_measurement: String) -> Result<String> {
         .unwrap();
     println!("status: {}", inserted_measurements);*/
     for m in &measurements {
-        println!("publication_time: {}, id: {}, index: {}, field description: {}, measurement: {}",
-                 m.publication_time, m.id, m.index, m.field_description, m.measurement);
+        println!("measurement_time_default: {}, id: {}, index: {}, field description: {}, measurement: {}",
+                 m.measurement_time_default, m.id, m.index, m.field_description, m.measurement);
     }
     Ok(format!("id: {}, index: {}", &measurements[0].id, &measurements[0].index))
 }

@@ -1,6 +1,6 @@
 table! {
     readings {
-        publication_time -> Nullable<Timestamp>,
+        measurement_time_default -> Nullable<Timestamptz>,
         id -> Nullable<Integer>,
         index -> Nullable<Integer>,
         field_description -> Nullable<Text>,

@@ -1,11 +1,11 @@
-use serde::{Deserialize};
-use chrono::{DateTime, Local, NaiveDateTime};
+use serde::{Deserialize, Deserializer, de};
+use chrono::{NaiveDateTime, DateTime, Local};
 use crate::schema::readings;
 
 #[derive(Deserialize, Insertable)]
 struct Reading {
     #[serde(with = "my_date_format")]
-    publication_time: NaiveDateTime,
+    measurement_time_default: DateTime<Local>,
     id: i32,
     index: i32,
     field_description: String,
