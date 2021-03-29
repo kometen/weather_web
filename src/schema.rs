@@ -7,3 +7,13 @@ table! {
         measurement -> Nullable<Float>,
     }
 }
+
+table! {
+    locations {
+        publication_time -> Nullable<Timestamptz>,
+        id -> Nullable<Integer>,
+        name -> Nullable<Text>,
+        latitude -> Nullable<Float>,
+        longitude -> Nullable<Float>,
+    }
+}

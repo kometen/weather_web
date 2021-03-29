@@ -1,6 +1,6 @@
 use serde::{Deserialize};
 use chrono::{DateTime, Local};
-use crate::schema::readings;
+use crate::schema::{readings, locations};
 
 #[derive(Deserialize, Insertable)]
 pub(crate) struct Reading {
@@ -10,6 +10,16 @@ pub(crate) struct Reading {
     pub(crate) index: i32,
     pub(crate) field_description: String,
     pub(crate) measurement: f32,
+}
+
+#[derive(Deserialize, Insertable)]
+pub(crate) struct Location {
+    #[serde(with = "my_date_format")]
+    pub(crate) publication_time: DateTime<Local>,
+    pub(crate) id: i32,
+    pub(crate) name: String,
+    pub(crate) latitude: f32,
+    pub(crate) longitude: f32,
 }
 
 // https://serde.rs/custom-date-format.html
