@@ -1,5 +1,5 @@
-use serde::{Deserialize, Deserializer, de};
-use chrono::{NaiveDateTime, DateTime, Local};
+use serde::{Deserialize};
+use chrono::{DateTime, Local};
 use crate::schema::readings;
 
 #[derive(Deserialize, Insertable)]

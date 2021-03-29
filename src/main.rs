@@ -1,11 +1,9 @@
-#[macro_use]
 extern crate diesel;
 
-use chrono::{DateTime, Local, NaiveDateTime};
+use chrono::{DateTime, Local,};
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder, Result};
 //use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
-use serde::{Deserialize, Deserializer, de};
-use diesel::prelude::*;
+use serde::{Deserialize};
 use weather_web::establish_connection;
 
 #[cfg(test)]
