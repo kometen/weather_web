@@ -25,22 +25,22 @@ async fn weather_data_get() -> impl Responder {
 }
 
 #[post("/weather_data")]
-async fn weather_data_post(weather_measurement: String) -> Result<String> {
+async fn weather_data_post(weather_data: String) -> Result<String> {
     let connection = establish_connection();
 
-    let measurements: Vec<models::Reading> = serde_json::from_str(&*weather_measurement).unwrap();
+    let wd: Vec<models::Reading> = serde_json::from_str(&*weather_data).unwrap();
 
-    let inserted_measurements = diesel::insert_into(readings)
-        .values(&measurements)
+    let inserted_wd = diesel::insert_into(readings)
+        .values(&wd)
         .on_conflict_do_nothing()
         .execute(&connection)
         .unwrap();
-    println!("count: {}", inserted_measurements);
+    println!("count: {}", inserted_wd);
 /*    for m in &measurements {
         println!("measurement_time_default: {}, id: {}, index: {}, field description: {}, measurement: {}",
                  m.measurement_time_default, m.id, m.index, m.field_description, m.measurement);
     }*/
-    Ok(format!("id: {}, index: {}", &measurements[0].id, &measurements[0].index))
+    Ok(format!("id: {}, index: {}", &wd[0].id, &wd[0].index))
 }
 
 #[get("/weather_stations")]
@@ -52,19 +52,19 @@ async fn weather_stations_get() -> impl Responder {
 async fn weather_stations_post(weather_stations: String) -> Result<String> {
     let connection = establish_connection();
 
-    let stations: Vec<models::Location> = serde_json::from_str(&*weather_stations).unwrap();
+    let ws: Vec<models::Location> = serde_json::from_str(&*weather_stations).unwrap();
 
-    let inserted_locations = diesel::insert_into(locations)
-        .values(&stations)
+    let inserted_ws = diesel::insert_into(locations)
+        .values(&ws)
         .on_conflict_do_nothing()
         .execute(&connection)
         .unwrap();
-    println!("count: {}", inserted_locations);
+    println!("count: {}", inserted_ws);
 /*    for l in &locations {
             println!("publication_time: {}, id: {}, name: {}, latitude: {}, longitude: {}",
                      l.publication_time, l.id, l.name, l.latitude, l.longitude);
         }*/
-    Ok(format!("id: {}, name: {}", &stations[0].id, &stations[0].name))
+    Ok(format!("id: {}, name: {}", &ws[0].id, &ws[0].name))
 }
 
 #[actix_web::main]
