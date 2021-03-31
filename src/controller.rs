@@ -1,9 +1,9 @@
 use actix_web::{get, post, HttpResponse, Responder, Result};
-use weather_web::{establish_connection, models};
-use models::{Reading, Location};
 use diesel::RunQueryDsl;
-use weather_web::schema::readings::dsl::readings;
+use models::{Location, Reading};
 use weather_web::schema::locations::dsl::locations;
+use weather_web::schema::readings::dsl::readings;
+use weather_web::{establish_connection, models};
 
 #[get("/")]
 pub(crate) async fn hello() -> impl Responder {
@@ -28,9 +28,9 @@ pub(crate) async fn weather_data_post(weather_data: String) -> Result<String> {
         .unwrap();
     println!("count: {}", inserted_wd);
     /*    for m in &measurements {
-            println!("measurement_time_default: {}, id: {}, index: {}, field description: {}, measurement: {}",
-                     m.measurement_time_default, m.id, m.index, m.field_description, m.measurement);
-        }*/
+        println!("measurement_time_default: {}, id: {}, index: {}, field description: {}, measurement: {}",
+                 m.measurement_time_default, m.id, m.index, m.field_description, m.measurement);
+    }*/
     Ok(format!("id: {}, index: {}", &wd[0].id, &wd[0].index))
 }
 
@@ -52,8 +52,8 @@ pub(crate) async fn weather_stations_post(weather_stations: String) -> Result<St
         .unwrap();
     println!("count: {}", inserted_ws);
     /*    for l in &locations {
-                println!("publication_time: {}, id: {}, name: {}, latitude: {}, longitude: {}",
-                         l.publication_time, l.id, l.name, l.latitude, l.longitude);
-            }*/
+        println!("publication_time: {}, id: {}, name: {}, latitude: {}, longitude: {}",
+                 l.publication_time, l.id, l.name, l.latitude, l.longitude);
+    }*/
     Ok(format!("id: {}, name: {}", &ws[0].id, &ws[0].name))
 }
