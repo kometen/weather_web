@@ -29,7 +29,7 @@ mod my_date_format {
 
     // https://docs.rs/chrono/0.4.19/chrono/format/strftime/index.html#fn8
     //const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S%:z";
-    const FORMAT: &'static str = "%+";
+    const FORMAT: &str = "%+";
 
     // The signature of a serialize_with function must follow the pattern:
     //
