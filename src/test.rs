@@ -1,6 +1,6 @@
-use super::*;
+use crate::controller;
 use actix_web::http::header;
-use actix_web::test;
+use actix_web::{test, App};
 
 #[actix_rt::test]
 async fn test_weather_data_ok() {
