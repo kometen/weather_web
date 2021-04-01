@@ -17,7 +17,7 @@ async fn test_weather_data_ok() {
 
     let result = test::read_body(resp).await;
 
-    assert_eq!(result, "id: 228, index: 201");
+    assert_eq!(result, "id: 228, index: 201".as_bytes());
 }
 
 #[actix_rt::test]
@@ -36,7 +36,7 @@ async fn test_weather_stations_ok() {
 
     let result = test::read_body(resp).await;
 
-    assert_eq!(result, "id: 205, name: E6 Rosten");
+    assert_eq!(result, "id: 205, name: E6 Rosten".as_bytes());
 }
 
 #[test]
