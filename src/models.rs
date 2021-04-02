@@ -28,7 +28,7 @@ mod my_date_format {
     use serde::{self, Deserialize, Deserializer};
 
     // https://docs.rs/chrono/0.4.19/chrono/format/strftime/index.html#fn8
-    //const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S%:z";
+    //const FORMAT: & str = "%Y-%m-%dT%H:%M:%S%.f%:z";
     const FORMAT: &str = "%+";
 
     // The signature of a serialize_with function must follow the pattern:
