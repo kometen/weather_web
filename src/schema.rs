@@ -4,7 +4,7 @@ table! {
         id -> Nullable<Integer>,
         index -> Nullable<Integer>,
         field_description -> Nullable<Text>,
-        measurement -> Nullable<Float>,
+        measurement -> Nullable<Numeric>,
     }
 }
 
@@ -13,7 +13,7 @@ table! {
         publication_time -> Nullable<Timestamptz>,
         id -> Nullable<Integer>,
         name -> Nullable<Text>,
-        latitude -> Nullable<Float>,
-        longitude -> Nullable<Float>,
+        latitude -> Nullable<Numeric>,
+        longitude -> Nullable<Numeric>,
     }
 }
