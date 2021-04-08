@@ -1,7 +1,7 @@
 use crate::schema::{locations, readings};
+use bigdecimal::BigDecimal;
 use chrono::{DateTime, Local};
 use serde::Deserialize;
-use bigdecimal::BigDecimal;
 
 #[derive(Deserialize, Insertable)]
 pub struct Reading {
