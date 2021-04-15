@@ -7,9 +7,7 @@ use serde::Deserialize;
 pub struct Reading {
     pub measurement_time_default: DateTime<Local>,
     pub id: i32,
-    pub index: i32,
-    pub field_description: String,
-    pub measurement: BigDecimal,
+    pub data: serde_json::Value,
 }
 
 #[derive(Deserialize, Insertable)]

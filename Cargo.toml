@@ -12,7 +12,7 @@ actix-rt = "2"
 openssl = { version = "0.10", features = ["v111"]}
 serde = "1.0.125"
 serde_json = "1.0.64"
-diesel = { version = "1.4.6", features = ["postgres", "chrono", "numeric"] }
+diesel = { version = "1.4.6", features = ["postgres", "chrono", "numeric", "serde_json"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 bigdecimal = { version = "0.1.0", features = ["serde"] }
 dotenv = "0.15"
