@@ -9,12 +9,15 @@ Table-definition:
 create table readings (
     measurement_time_default timestamp with time zone not null,
     id int not null,
-    index int not null,
-    field_description text not null,
-    measurement numeric(9,3)
+    data Jsonb not null
 );
 
-create unique index measurement_time_default_id_index_unique_index on readings (measurement_time_default, id, index);
+create unique index measurement_time_default_id_unique_index on readings (measurement_time_default, id);
+
+create view latest_readings as
+  select * from readings where measurement_time_default =
+    (select measurement_time_default from readings order by measurement_time_default desc limit 1)
+  order by id;
 
 create table locations (
     publication_time timestamp with time zone not null,
