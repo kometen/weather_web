@@ -62,7 +62,7 @@ pub(crate) async fn weather_stations_post(weather_stations: String) -> Result<St
 pub(crate) async fn test_weather_data_post(weather_data: String) -> Result<String> {
     let wd: Vec<Reading> = serde_json::from_str(&*weather_data).unwrap();
 
-    Ok(format!("location-id: {}", &wd[0].id))
+    Ok(format!("id: {}", &wd[0].id))
 }
 
 #[post("/test_weather_stations")]
