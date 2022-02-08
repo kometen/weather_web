@@ -14,6 +14,16 @@ create table readings (
 
 create unique index measurement_time_default_id_unique_index on readings (measurement_time_default, id);
 
+create table locations (
+    publication_time timestamp with time zone not null,
+    id int not null,
+    name text not null,
+    latitude numeric(10,6),
+    longitude numeric(10,6)
+);
+
+create unique index id_unique_index on locations (id);
+
 create view latest_readings as
   select * from readings where measurement_time_default =
     (select measurement_time_default from readings order by measurement_time_default desc limit 1)
@@ -25,13 +35,4 @@ create view location_readings as
   from
     latest_readings lr join locations lc on lr.id = lc.id;
   
-create table locations (
-    publication_time timestamp with time zone not null,
-    id int not null,
-    name text not null,
-    latitude numeric(10,6),
-    longitude numeric(10,6)
-);
-
-create unique index id_unique_index on locations (id);
 ```
