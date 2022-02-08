@@ -1,0 +1,15 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System(weather_data, "XML- to JSON-parser")
+
+System_Boundary(c1, "Retrieve XML") {
+    Container(retriever, "Parser", "Rust, Diesel, Serde, actix-web", "Parse JSON and save to database")
+}
+
+System(database, "postgresql", "actix-web")
+
+Rel(weather_data, retriever, "Uses", "https")
+Rel(retriever, database, "Uses", "postgresql port 5432")
+
+@enduml
