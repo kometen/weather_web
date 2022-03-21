@@ -20,7 +20,8 @@ create table locations (
     id int not null,
     name text not null,
     latitude numeric(10,6),
-    longitude numeric(10,6)
+    longitude numeric(10,6),
+    geom geometry(Point, 4326)
 );
 
 create unique index id_unique_index on locations (id);
@@ -66,5 +67,35 @@ order by measurement_time_default desc, id
 
 $body$
 language sql;
+
+```
+
+```
+-- Add postgis to db. On FreeBSD this must be compiled manually since the packaged version depends on PostgreSQL 13.
+CREATE EXTENSION postgis;
+
+-- Alter existing table locations.
+alter table locations add column geom geometry(Point, 4326);
+
+-- Update geom column with data.
+update locations set geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);
+
+-- Add trigger that calculates the position.
+-- https://stackoverflow.com/questions/16737738/postgresql-set-a-default-cell-value-according-to-another-cell-value
+create or replace function trg_geom_function()
+  returns trigger
+  language plpgsql as
+$func$
+begin
+  new.geom := ST_SetSRID(ST_MakePoint(new.longitude, new.latitude), 4326);
+  return new;
+end
+$func$;
+
+create trigger geom_default
+  before insert on locations
+  for each row
+  when (new.geom is null and new.latitude is not null and new.longitude is not null)
+  execute procedure trg_geom_function();
 
 ```
