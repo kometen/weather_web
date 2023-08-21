@@ -19,7 +19,7 @@ pub(crate) async fn weather_data_get() -> impl Responder {
 pub(crate) async fn weather_data_post(weather_data: String) -> Result<String> {
     let connection = establish_connection();
 
-    let wd: Vec<Reading> = serde_json::from_str(&*weather_data).unwrap();
+    let wd: Vec<Reading> = serde_json::from_str(&weather_data).unwrap();
 
     let inserted_wd = diesel::insert_into(readings)
         .values(&wd)
@@ -43,7 +43,7 @@ pub(crate) async fn weather_stations_get() -> impl Responder {
 pub(crate) async fn weather_stations_post(weather_stations: String) -> Result<String> {
     let connection = establish_connection();
 
-    let ws: Vec<Location> = serde_json::from_str(&*weather_stations).unwrap();
+    let ws: Vec<Location> = serde_json::from_str(&weather_stations).unwrap();
 
     let inserted_ws = diesel::insert_into(locations)
         .values(&ws)
@@ -60,14 +60,14 @@ pub(crate) async fn weather_stations_post(weather_stations: String) -> Result<St
 
 #[post("/test_weather_data")]
 pub(crate) async fn test_weather_data_post(weather_data: String) -> Result<String> {
-    let wd: Vec<Reading> = serde_json::from_str(&*weather_data).unwrap();
+    let wd: Vec<Reading> = serde_json::from_str(&weather_data).unwrap();
 
     Ok(format!("id: {}", &wd[0].id))
 }
 
 #[post("/test_weather_stations")]
 pub(crate) async fn test_weather_stations_post(weather_stations: String) -> Result<String> {
-    let ws: Vec<Location> = serde_json::from_str(&*weather_stations).unwrap();
+    let ws: Vec<Location> = serde_json::from_str(&weather_stations).unwrap();
 
     Ok(format!("id: {}, name: {}", &ws[0].id, &ws[0].name))
 }
