@@ -38,8 +38,3 @@ async fn test_weather_stations_ok() {
 
     assert_eq!(result, "id: 205, name: E6 Rosten".as_bytes());
 }
-
-#[test]
-fn my_test() {
-    assert_eq!(2, 1 + 1);
-}

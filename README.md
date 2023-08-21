@@ -1,7 +1,7 @@
 # weather_web
 Receive weather-reports in json-format.
 
-Get weather data from Statens Vegvesen as a JSON-array and push that to an database.
+Get weather data from Statens Vegvesen as a JSON-array and push that to a database.
 
 Table-definition:
 
@@ -97,5 +97,63 @@ create trigger geom_default
   for each row
   when (new.geom is null and new.latitude is not null and new.longitude is not null)
   execute procedure trg_geom_function();
+
+```
+
+Get latest readings for locations closest to point.
+```
+create or replace function measurements_closest_locations_function(latitude numeric, longitude numeric, locations integer)
+  returns table (id integer, name text, distance text, latitude text, longitude text, latest_reading timestamp with time zone, measurements jsonb)
+as
+$body$
+
+
+select id, name, distance, latitude, longitude, latest_reading,
+  json_agg(
+    jsonb_build_object(
+      value->>'field_description',
+      value->>'measurement'
+    )
+  ) as measurements
+from (
+
+  select
+    r.measurement_time_default as latest_reading,
+    r.id,
+    r.data,
+    l.name,
+    l.latitude,
+    l.longitude,
+    l.distance
+  from
+    readings r
+  join
+  (
+
+    select
+      id,
+      name,
+      latitude,
+      longitude,
+      locations.geom <-> (select ST_AsEWKT(ST_SetSRID(ST_MakePoint($2, $1), 4326), 1))::geometry AS distance
+    from
+      locations
+    order by
+      distance
+    limit $3
+
+  ) l
+
+on r.id = l.id
+order by
+  r.measurement_time_default, r.id
+limit $3
+
+) parsed, jsonb_array_elements(data) -- <- jsonb_array_elements(data) unwraps the json-structure and it can be used in jsonb_build_object()
+group by  id, name, latitude, longitude, distance, latest_reading
+order by distance
+
+$body$
+language sql;
 
 ```
