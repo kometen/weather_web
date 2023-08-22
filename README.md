@@ -100,7 +100,8 @@ create trigger geom_default
 
 ```
 
-Get latest readings for locations closest to point.
+Get latest readings for locations closest to a latitude/longitude point.
+
 ```
 create or replace function measurements_closest_locations_function(latitude numeric, longitude numeric, locations integer)
   returns table (id integer, name text, distance text, latitude text, longitude text, latest_reading timestamp with time zone, measurements jsonb)
@@ -118,6 +119,7 @@ select id, name, distance, latitude, longitude, latest_reading,
 from (
 
   select
+    distinct on (r.id)
     r.measurement_time_default as latest_reading,
     r.id,
     r.data,
@@ -146,12 +148,15 @@ from (
 
 on r.id = l.id
 order by
-  r.measurement_time_default, r.id
+  r.id, r.measurement_time_default desc
 limit $3
 
 ) parsed, jsonb_array_elements(data) -- <- jsonb_array_elements(data) unwraps the json-structure and it can be used in jsonb_build_object()
 group by  id, name, latitude, longitude, distance, latest_reading
 order by distance
+
+$body$
+language sql;
 
 $body$
 language sql;
