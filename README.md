@@ -157,8 +157,4 @@ order by distance
 
 $body$
 language sql;
-
-$body$
-language sql;
-
 ```
