@@ -14,3 +14,4 @@ select measurement_time_default, id, name, latitude, longitude,
   )
 from (select  measurement_time_default, id, name, latitude, longitude, data from location_readings) location_readings, jsonb_array_elements(location_readings.data)
 group by measurement_time_default, id, name, latitude, longitude;
+
